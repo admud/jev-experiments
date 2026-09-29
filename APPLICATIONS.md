@@ -16,38 +16,27 @@ does not claim that Jev has been integrated into any of these products.
 These examples establish only that the API integration and evaluation harness
 work on the included cases.
 
-## Proposed product experiments
+## General use-case patterns
 
-- **Prediction-market research:** triage whether a retrieved article is relevant
-  to the exact question and settlement rules, or whether two venue listings may
-  refer to the same contract. Keep source review and market mapping under human
-  control. No integration has been made.
-- **Subscription support:** evaluate bounded intent routing or support evidence
-  matching using approved, de-identified examples. Jev would not issue refunds,
-  change subscriptions, or send messages. No integration or evaluation has been
-  made.
+The following are candidate patterns, not claims of measured performance or
+recommendations to enable them in production. Each should be tested against a
+representative, independently labeled dataset for its own domain.
 
-## Faith and reference assistant (anonymized)
+| Pattern | Possible judgment | Keep deterministic or human-controlled |
+| --- | --- | --- |
+| Request triage | Route a message to a bounded category; detect when a person is requested | Account lookup, escalation delivery, and customer-facing actions |
+| Evidence matching | Decide whether a supplied excerpt supports, contradicts, or leaves a statement unresolved | Source selection, citations, and final approval |
+| Search and retrieval | Rank whether a candidate result answers a query or matches a stated scope | Retrieval, access controls, and result disclosure |
+| Duplicate detection | Judge whether two records likely refer to the same underlying item | Canonical IDs, merges, and deletion |
+| Form and document review | Flag missing, inconsistent, or out-of-scope information against a rubric | Required-field validation, policy enforcement, and acceptance |
+| Content quality review | Check whether generated text follows a brief, tone guide, or required structure | Factual verification, publication, and legal or safety approval |
+| Conversation handoff | Detect unresolved intent, low confidence, or a request for escalation | Handoff execution and service-level commitments |
+| Feedback and survey analysis | Group comments by topic or sentiment and identify ambiguous responses | Statistical reporting, personnel decisions, and individual outcomes |
 
-Jev has been integrated into a reference assistant behind per-feature flags
-that default off. The judgment layer fails open and does not write answers.
-Merged work covers cache matching, front-door triage, multilingual verdict
-checks, reference-library question checks and passage selection, greeting and
-gibberish triage, and relevance ordering for keyword-search results.
-
-Separate follow-up experiments explored offline relevance judgments,
-end-to-end answer flow, latency, passage selection, and source-library routing.
-Those experiments are on an unmerged development branch and are not part of the
-merged integration. Treat their results as exploratory: datasets and runs are
-small, latency and cost depend on the environment, and one comparison found a
-Jev-only speculative writer less reliable than no-Jev and hybrid approaches.
-
-In one limited 13-question passage-selection comparison, Jev and the existing
-selector chose the same passages 82% of the time; median selection time was
-0.4 s for Jev and 2.5 s for the existing selector. This does not establish
-general quality or production readiness. Enabling the integration sends user
-questions and draft text to the hosted provider, so data-handling settings
-should be reviewed before enabling any feature.
+Start with shadow evaluation or human review. Keep the judgment bounded to the
+provided context, define an abstain/review path, and measure false positives,
+false negatives, latency, and cost before relying on outputs. Avoid sending
+personal or confidential content until data handling is approved.
 
 ## General boundaries
 
